@@ -31,10 +31,7 @@ public class FoodService {
         List<Food> realFoods = foodRepository.findAllByRestaurantId(restaurantId);
         List<FoodResponseDto> foods = new ArrayList<FoodResponseDto>();
         for (Food food : realFoods) {
-            Long id = food.getId();
-            String name = food.getName();
-            int price = food.getPrice();
-            FoodResponseDto foodResponseDto = new FoodResponseDto(id, name, price);
+            FoodResponseDto foodResponseDto = new FoodResponseDto(food);
             foods.add(foodResponseDto);
         }
         return foods;
