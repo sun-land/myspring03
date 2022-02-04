@@ -24,20 +24,13 @@ public class FoodService {
 
     public void registerFood(List<FoodRequestDto> foodRequestDtos, Long restaurantId) {
         FoodValid foodValid = new FoodValid();
-        List<String> foods = new ArrayList<>();
 
-        // 같은거 입력 체크
-        for (FoodRequestDto requestDto:foodRequestDtos) {
-            if (!foods.contains(requestDto.getName())) {
-                foods.add(requestDto.getName());
-            } else {
-                throw new IllegalArgumentException("작성한 음식 중 동일한 이름이 존재합니다.");
-            }
-
+        // 작성한 메뉴 중 중복이름 체크
+        if(!foodValid.isDuplicateName(foodRequestDtos)) {
+            throw new IllegalArgumentException("작성한 메뉴 중에 동일한 이름이 존재합니다.");
         }
 
-
-        // 체크
+        // 가격 조건, 이미 있는 이름 체크
         for (FoodRequestDto requestDto : foodRequestDtos) {
             Optional<Food> find = foodRepository.findByNameAndRestaurantId(requestDto.getName(),restaurantId);
             if (!foodValid.isValidPrice(requestDto.getPrice())) {
@@ -45,7 +38,6 @@ public class FoodService {
             } else if (find.isPresent()) {
                 throw new IllegalArgumentException("동일한 이름의 음식이 존재합니다.");
             }
-
         }
 
         // 저장
