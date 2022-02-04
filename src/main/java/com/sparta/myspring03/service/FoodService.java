@@ -22,15 +22,12 @@ public class FoodService {
         this.foodRepository = foodRepository;
     }
 
-    public List<Food> registerFood(List<FoodRequestDto> foodRequestDtos, Long restaurantId) {
-        List<Food> foods = new ArrayList<>();
+    public void registerFood(List<FoodRequestDto> foodRequestDtos, Long restaurantId) {
         for (FoodRequestDto requestDto : foodRequestDtos) {
             requestDto.setRestaurantId(restaurantId);
             Food food = new Food(requestDto);
             foodRepository.save(food);
-            foods.add(food);
         }
-        return foods;
     }
 
     public List<FoodResponseDto> getAllFoods(Long restaurantId) {
