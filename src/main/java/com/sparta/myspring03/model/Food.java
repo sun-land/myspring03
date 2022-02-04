@@ -1,6 +1,6 @@
 package com.sparta.myspring03.model;
 
-import com.sparta.myspring03.dto.FoodRequestDto;
+import com.sparta.myspring03.requestDto.FoodRequestDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

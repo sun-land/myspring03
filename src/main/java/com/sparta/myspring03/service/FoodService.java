@@ -1,8 +1,8 @@
 package com.sparta.myspring03.service;
 
 import com.sparta.myspring03.Valid.FoodValid;
-import com.sparta.myspring03.dto.FoodRequestDto;
-import com.sparta.myspring03.dto.FoodResponseDto;
+import com.sparta.myspring03.requestDto.FoodRequestDto;
+import com.sparta.myspring03.responseDto.FoodResponseDto;
 import com.sparta.myspring03.model.Food;
 import com.sparta.myspring03.repository.FoodRepository;
 import org.springframework.beans.factory.annotation.Autowired;

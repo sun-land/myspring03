@@ -1,4 +1,4 @@
-package com.sparta.myspring03.dto;
+package com.sparta.myspring03.requestDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

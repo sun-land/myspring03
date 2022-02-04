@@ -1,7 +1,6 @@
-package com.sparta.myspring03.dto;
+package com.sparta.myspring03.responseDto;
 
 import com.sparta.myspring03.model.Food;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter

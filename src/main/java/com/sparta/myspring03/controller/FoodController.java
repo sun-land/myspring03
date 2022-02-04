@@ -1,13 +1,11 @@
 package com.sparta.myspring03.controller;
 
-import com.sparta.myspring03.dto.FoodRequestDto;
-import com.sparta.myspring03.dto.FoodResponseDto;
-import com.sparta.myspring03.model.Food;
+import com.sparta.myspring03.requestDto.FoodRequestDto;
+import com.sparta.myspring03.responseDto.FoodResponseDto;
 import com.sparta.myspring03.service.FoodService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController

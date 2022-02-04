@@ -1,7 +1,7 @@
 package com.sparta.myspring03.service;
 
 import com.sparta.myspring03.Valid.RestaurantValid;
-import com.sparta.myspring03.dto.RestaurantRequestDto;
+import com.sparta.myspring03.requestDto.RestaurantRequestDto;
 import com.sparta.myspring03.model.Restaurant;
 import com.sparta.myspring03.repository.RestaurantRepository;
 import org.springframework.beans.factory.annotation.Autowired;
