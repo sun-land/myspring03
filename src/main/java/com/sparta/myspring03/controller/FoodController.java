@@ -1,13 +1,14 @@
 package com.sparta.myspring03.controller;
 
 import com.sparta.myspring03.dto.FoodRequestDto;
+import com.sparta.myspring03.dto.FoodResponseDto;
 import com.sparta.myspring03.model.Food;
 import com.sparta.myspring03.service.FoodService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 public class FoodController {
@@ -23,6 +24,12 @@ public class FoodController {
     @PostMapping("/restaurant/{restaurantId}/food/register")
     public Food registerFood(@RequestBody FoodRequestDto foodRequestDto, @PathVariable Long restaurantId) {
         return foodService.registerFood(foodRequestDto,restaurantId);
+    }
+
+    // 메뉴판 조회 API
+    @GetMapping("/restaurant/{restaurantId}/foods")
+    public List<FoodResponseDto> getAllFoods(@PathVariable Long restaurantId) {
+        return foodService.getAllFoods(restaurantId);
     }
 
 }
