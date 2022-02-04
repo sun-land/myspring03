@@ -22,19 +22,15 @@ public class FoodService {
         this.foodRepository = foodRepository;
     }
 
-    public Food registerFood(FoodRequestDto foodRequestDto, Long restaurantId) {
-        Optional<Food> find = foodRepository.findByNameAndRestaurantId(foodRequestDto.getName(),restaurantId);
-        FoodValid foodValid = new FoodValid();
-        if (find.isPresent()) {
-            throw new IllegalArgumentException("동일한 이름의 음식이 존재합니다.");
-        } else if (!foodValid.isValidPrice(foodRequestDto.getPrice())) {
-            throw new IllegalArgumentException("가격이 조건에 맞지 않습니다.");
-        } else {
-            foodRequestDto.setRestaurantId(restaurantId);
-            Food food = new Food(foodRequestDto);
+    public List<Food> registerFood(List<FoodRequestDto> foodRequestDtos, Long restaurantId) {
+        List<Food> foods = new ArrayList<>();
+        for (FoodRequestDto requestDto : foodRequestDtos) {
+            requestDto.setRestaurantId(restaurantId);
+            Food food = new Food(requestDto);
             foodRepository.save(food);
-            return food;
+            foods.add(food);
         }
+        return foods;
     }
 
     public List<FoodResponseDto> getAllFoods(Long restaurantId) {
