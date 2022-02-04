@@ -23,8 +23,8 @@ public class RestaurantController {
 
     // 음식점 등록 API
     @PostMapping("/restaurant/register")
-    public void registerRestaurant(@RequestBody RestaurantRequestDto restaurantRequestDto) {
-        restaurantService.registerRestaurant(restaurantRequestDto);
+    public Restaurant registerRestaurant(@RequestBody RestaurantRequestDto restaurantRequestDto) {
+        return restaurantService.registerRestaurant(restaurantRequestDto);
     }
 
     // 모든 음식점 조회 API

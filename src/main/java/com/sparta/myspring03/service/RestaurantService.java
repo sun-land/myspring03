@@ -20,7 +20,7 @@ public class RestaurantService {
     }
 
     // 음식점 등록
-    public void registerRestaurant(RestaurantRequestDto restaurantRequestDto) {
+    public Restaurant registerRestaurant(RestaurantRequestDto restaurantRequestDto) {
         RestaurantValid restaurantValid = new RestaurantValid();
         if (!restaurantValid.isValidMinOrderPrice(restaurantRequestDto.getMinOrderPrice())) {
             throw new IllegalArgumentException("최소주문가격이 조건에 맞지 않습니다.");
@@ -29,6 +29,7 @@ public class RestaurantService {
         } else {
             Restaurant restaurant = new Restaurant(restaurantRequestDto);
             restaurantRepository.save(restaurant);
+            return restaurant;
         }
     }
 
