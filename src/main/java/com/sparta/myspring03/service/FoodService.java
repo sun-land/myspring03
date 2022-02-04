@@ -23,7 +23,7 @@ public class FoodService {
     }
 
     public Food registerFood(FoodRequestDto foodRequestDto, Long restaurantId) {
-        Optional<Food> find = foodRepository.findByName(foodRequestDto.getName());
+        Optional<Food> find = foodRepository.findByNameAndRestaurantId(foodRequestDto.getName(),restaurantId);
         FoodValid foodValid = new FoodValid();
         if (find.isPresent()) {
             throw new IllegalArgumentException("동일한 이름의 음식이 존재합니다.");
