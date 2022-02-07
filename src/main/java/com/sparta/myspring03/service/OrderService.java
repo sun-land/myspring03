@@ -114,4 +114,44 @@ public class OrderService {
 
         return orderResponseDto;
     }
+
+    public List<OrderResponseDto> getAllOrders() {
+        List<Ordering> orderings = orderRepository.findAll();
+        List<OrderResponseDto> orderResponseDtos = new ArrayList<>();
+        for (Ordering ordering : orderings) {
+            // 오더에 대한 FoodOrder 다 가져오기
+            List<FoodOrder> foodOrders = foodOrderRepository.findAllByOrdering(ordering);
+
+            // 가져온 FoodOrder로 FoodOrderResponseDto 만들기
+            List<FoodOrderResponseDto> foodOrderResponseDtos = new ArrayList<>();
+            for (int i=0; i<foodOrders.size(); i++) {
+                String name = foodOrders.get(i).getFood().getName();
+                int quantity = foodOrders.get(i).getQuantity();
+                int price = foodOrders.get(i).getFood().getPrice() * quantity;
+                FoodOrderResponseDto responseDto = new FoodOrderResponseDto(name, quantity, price);
+                foodOrderResponseDtos.add(responseDto);
+            }
+
+            // OrderResponseDto 만들기
+            Restaurant restaurant = restaurantRepository.findById(ordering.getRestaurantId())
+                    .orElseThrow(()-> new IllegalArgumentException("존재하지 않는 식당입니다."));
+            String restaurantName = restaurant.getName();
+            int deliveryFee = restaurant.getDeliveryFee();
+            int totalPrice = 0;
+            totalPrice += deliveryFee;
+            for (FoodOrderResponseDto foodOrderResponseDto : foodOrderResponseDtos) {
+                totalPrice += foodOrderResponseDto.getPrice();
+            }
+
+            OrderResponseDto orderResponseDto = new OrderResponseDto(
+                    restaurantName,
+                    foodOrderResponseDtos,
+                    deliveryFee,
+                    totalPrice);
+
+            orderResponseDtos.add(orderResponseDto);
+        }
+
+        return orderResponseDtos;
+    }
 }
