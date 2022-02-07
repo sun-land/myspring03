@@ -28,27 +28,28 @@ public class FoodService {
 
     // 유효성 체크 부분 일단 다 주석 처리
     public void registerFood(List<FoodRequestDto> foodRequestDtos, Long restaurantId) {
+
+        FoodValid foodValid = new FoodValid();
+
+        // 레스토랑 체크
         Restaurant restaurant = restaurantRepository.findById(restaurantId)
                 .orElseThrow(()-> new IllegalArgumentException("존재하지 않는 음식점입니다."));
-        List<Food> foods = new ArrayList<>();
-//        FoodValid foodValid = new FoodValid();
-//
-//        // 작성한 메뉴 중 중복이름 체크
-//        if(!foodValid.isDuplicateName(foodRequestDtos)) {
-//            throw new IllegalArgumentException("작성한 메뉴 중에 동일한 이름이 존재합니다.");
-//        }
-//
-//        // 가격 조건, 이미 있는 이름 체크
-//        for (FoodRequestDto requestDto : foodRequestDtos) {
-//            Optional<Food> find = foodRepository.findByNameAndRestaurantId(requestDto.getName(),restaurantId);
-//            if (!foodValid.isValidPrice(requestDto.getPrice())) {
-//                throw new IllegalArgumentException("가격이 조건에 맞지 않습니다.");
-//            } else if (find.isPresent()) {
-//                throw new IllegalArgumentException("동일한 이름의 음식이 존재합니다.");
-//            }
-//        }
+
+
+        // 작성한 메뉴끼리 중복 체크, 가격 체크
+        foodValid.isValidFood(foodRequestDtos);
+
+        // 등록한 음식과 중복 체크
+        List<Food> existFoods = foodRepository.findAllByRestaurant(restaurant);
+        List<String> existFoodNames = new ArrayList<>();
+        for (Food existFood : existFoods) {
+            existFoodNames.add(existFood.getName());
+        }
+        foodValid.isDuplicatedFood(foodRequestDtos,existFoodNames);
+
 
         // foods 리스트 만들기
+        List<Food> foods = new ArrayList<>();
         for (FoodRequestDto requestDto : foodRequestDtos) {
             requestDto.setRestaurant(restaurant);
             Food food = new Food(requestDto);
