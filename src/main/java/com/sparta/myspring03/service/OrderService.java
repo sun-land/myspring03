@@ -87,18 +87,16 @@ public class OrderService {
         String restaurantName = restaurant.getName();
         int deliveryFee = restaurant.getDeliveryFee();
         int totalPrice = 0;
-        totalPrice += deliveryFee;
         for (FoodOrderResponseDto foodOrderResponseDto : foodOrderResponseDtos) {
             totalPrice += foodOrderResponseDto.getPrice();
         }
-
-        // 찍히는지 확인하려고 잠깐 적은 것
-        // int min = restaurant.getMinOrderPrice();
 
         // 최소주문 가격 체크
         if (totalPrice<restaurant.getMinOrderPrice()) {
             throw new IllegalArgumentException("최소주문가격 이상으로 주문해주세요.");
         }
+
+        totalPrice += deliveryFee;
 
         // 주문번호 저장
         orderRepository.save(ordering);
