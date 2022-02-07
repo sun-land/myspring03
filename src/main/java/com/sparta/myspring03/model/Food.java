@@ -15,8 +15,9 @@ public class Food {
     @Id
     private Long id;
 
-    @Column(nullable = false)
-    private Long restaurantId;
+    @ManyToOne
+    @JoinColumn(name="RESTAURNAT_ID", nullable = false)
+    Restaurant restaurant;
 
     @Column(nullable = false)
     private String name;
@@ -25,7 +26,7 @@ public class Food {
     private int price;
 
     public Food(FoodRequestDto foodRequestDto) {
-        this.restaurantId = foodRequestDto.getRestaurantId();
+        this.restaurant = foodRequestDto.getRestaurant();
         this.name = foodRequestDto.getName();
         this.price = foodRequestDto.getPrice();
     }

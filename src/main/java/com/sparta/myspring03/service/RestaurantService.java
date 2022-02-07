@@ -22,15 +22,6 @@ public class RestaurantService {
     // 음식점 등록
     public Restaurant registerRestaurant(RestaurantRequestDto restaurantRequestDto) {
         RestaurantValid restaurantValid = new RestaurantValid();
-//        if (!restaurantValid.isValidMinOrderPrice(restaurantRequestDto.getMinOrderPrice())) {
-//            throw new IllegalArgumentException("최소주문가격이 조건에 맞지 않습니다.");
-//        } else if (!restaurantValid.isValidDeliveryFee(restaurantRequestDto.getDeliveryFee())) {
-//            throw new IllegalArgumentException("기본 배달비가 조건에 맞지 않습니다.");
-//        } else {
-//            Restaurant restaurant = new Restaurant(restaurantRequestDto);
-//            restaurantRepository.save(restaurant);
-//            return restaurant;
-//        }
 
         // 음식점 유효성 검사
         restaurantValid.isValidRestaurant(restaurantRequestDto);
