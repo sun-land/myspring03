@@ -45,14 +45,18 @@ public class OrderService {
         // 입력받은 음식 주문 리스트
         List<FoodOrderRequestDto> foods = orderRequestDto.getFoods();
 
-        // 주문번호 디비에 저장
+        // 주문 생성
         Ordering ordering = new Ordering(restaurantId);
-        Ordering savedOrdering = orderRepository.save(ordering);
 
-        // 한 주문에 들어온 음식 주문 리스트 디비에 저장하는 과정
-        // 1. foods의 ID들을 토대로 디비에서 food 리스트 불러오기
+
+        // 음식 주문(FoodOrder) 리스트 만들기
+        // 1. foods의 음식주문들의 수량체크 + 해당 음식의 아이디를 foodsId에 추가
         List<Long> foodsId = new ArrayList<>();
         for (FoodOrderRequestDto foodOrderRequestDto : foods) {
+            int quantity = foodOrderRequestDto.getQuantity();
+            if(quantity<1||quantity>100) {
+                throw new IllegalArgumentException("음식 수량은 1~100 사이로 입력해주세요.");
+            }
             foodsId.add(foodOrderRequestDto.getId());
         }
         List<Food> foundFood = foodRepository.findAllById(foodsId);
@@ -65,21 +69,20 @@ public class OrderService {
             FoodOrder foodOrder = new FoodOrder(foods.get(i));
             foodOrders.add(foodOrder);
         }
-        // 3. 모든 foodOrder 저장
-        List<FoodOrder> savedFoodOrders = foodOrderRepository.saveAll(foodOrders);
+
 
         // FoodOrderResponseDto 만들기
         List<FoodOrderResponseDto> foodOrderResponseDtos = new ArrayList<>();
-        for (int i=0; i<savedFoodOrders.size(); i++) {
-            String name = savedFoodOrders.get(i).getFood().getName();
-            int quantity = savedFoodOrders.get(i).getQuantity();
-            int price = savedFoodOrders.get(i).getFood().getPrice() * quantity;
+        for (int i=0; i<foodOrders.size(); i++) {
+            String name = foodOrders.get(i).getFood().getName();
+            int quantity = foodOrders.get(i).getQuantity();
+            int price = foodOrders.get(i).getFood().getPrice() * quantity;
             FoodOrderResponseDto responseDto = new FoodOrderResponseDto(name, quantity, price);
             foodOrderResponseDtos.add(responseDto);
         }
 
         // OrderResponseDto 만들기
-        Restaurant restaurant = restaurantRepository.findById(savedOrdering.getRestaurantId())
+        Restaurant restaurant = restaurantRepository.findById(ordering.getRestaurantId())
                 .orElseThrow(()-> new IllegalArgumentException("존재하지 않는 식당입니다."));
         String restaurantName = restaurant.getName();
         int deliveryFee = restaurant.getDeliveryFee();
@@ -88,6 +91,19 @@ public class OrderService {
         for (FoodOrderResponseDto foodOrderResponseDto : foodOrderResponseDtos) {
             totalPrice += foodOrderResponseDto.getPrice();
         }
+
+        // 찍히는지 확인하려고 잠깐 적은 것
+        // int min = restaurant.getMinOrderPrice();
+
+        // 최소주문 가격 체크
+        if (totalPrice<restaurant.getMinOrderPrice()) {
+            throw new IllegalArgumentException("최소주문가격 이상으로 주문해주세요.");
+        }
+
+        // 주문번호 저장
+        orderRepository.save(ordering);
+        //모든 foodOrder 저장
+        foodOrderRepository.saveAll(foodOrders);
 
          OrderResponseDto orderResponseDto = new OrderResponseDto(
                 restaurantName,
