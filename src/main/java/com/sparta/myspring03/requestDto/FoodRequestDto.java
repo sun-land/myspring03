@@ -13,6 +13,8 @@ import lombok.Setter;
 public class FoodRequestDto {
 
     private Restaurant restaurant;
+    // 입력 받는 값
     private String name;
+    // 입력 받는 값
     private int price;
 }
