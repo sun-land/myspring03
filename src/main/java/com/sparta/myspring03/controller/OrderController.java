@@ -21,13 +21,13 @@ public class OrderController {
         this.orderService = orderService;
     }
 
-    // 주문하기
+    // 주문하기 API
     @PostMapping("/order/request")
     public OrderResponseDto saveOrder(@RequestBody OrderRequestDto orderRequestDto) {
         return orderService.saveOrder(orderRequestDto);
     }
 
-    // 주문 조회
+    // 주문 조회 API
     @GetMapping("/orders")
     public List<OrderResponseDto> getAllOrders() {
     List<OrderResponseDto> orderResponseDtos = orderService.getAllOrders();

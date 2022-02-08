@@ -37,6 +37,7 @@ public class OrderService {
         this.restaurantRepository = restaurantRepository;
     }
 
+    // 주문 저장 메소드
     public OrderResponseDto saveOrder(OrderRequestDto orderRequestDto) {
 
         // 입력받은 레스토랑 아이디
@@ -48,9 +49,8 @@ public class OrderService {
         // 주문 생성
         Ordering ordering = new Ordering(restaurantId);
 
-
         // 음식 주문(FoodOrder) 리스트 만들기
-        // 1. foods의 음식주문들의 수량체크 + 해당 음식의 아이디를 foodsId에 추가
+        // 1. foods의 음식 주문들 수량 유효성 체크 + 음식의 아이디를 foodsId 리스트로 모으기
         List<Long> foodsId = new ArrayList<>();
         for (FoodOrderRequestDto foodOrderRequestDto : foods) {
             int quantity = foodOrderRequestDto.getQuantity();
@@ -59,9 +59,11 @@ public class OrderService {
             }
             foodsId.add(foodOrderRequestDto.getId());
         }
+
+        // 2. foodsId에 적힌 리스트로 해당 아이디의 Food 찾아오기
         List<Food> foundFood = foodRepository.findAllById(foodsId);
 
-        // 2. foodOrderRequestDto에 food 추가, Order 추가해주면서 FoodOrder 리스트 만들기
+        // 3. foodOrderRequestDto에 Food와 Order추가해서 FoodOrder 리스트 만들기
         List<FoodOrder> foodOrders = new ArrayList<>();
         for (int i=0; i<foods.size();i++) {
             foods.get(i).setFood(foundFood.get(i));

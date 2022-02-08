@@ -1,6 +1,5 @@
 package com.sparta.myspring03.Valid;
 
-import com.sparta.myspring03.model.Food;
 import com.sparta.myspring03.requestDto.FoodRequestDto;
 
 import java.util.ArrayList;

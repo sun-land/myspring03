@@ -26,12 +26,12 @@ public class FoodService {
         this.restaurantRepository = restaurantRepository;
     }
 
-    // 유효성 체크 부분 일단 다 주석 처리
+    // 음식 등록 메소드
     public void registerFood(List<FoodRequestDto> foodRequestDtos, Long restaurantId) {
 
         FoodValid foodValid = new FoodValid();
 
-        // 레스토랑 체크
+        // 레스토랑 존재 체크
         Restaurant restaurant = restaurantRepository.findById(restaurantId)
                 .orElseThrow(()-> new IllegalArgumentException("존재하지 않는 음식점입니다."));
 
@@ -56,15 +56,19 @@ public class FoodService {
             foods.add(food);
         }
 
+        // 디비에 저장
         foodRepository.saveAll(foods);
     }
 
-    // 메뉴판 조회하기
+    // 메뉴판 조회하기 메소드
     public List<FoodResponseDto> getAllFoods(Long restaurantId) {
+
+        // 레스토랑 존재 확인
         Restaurant restaurant = restaurantRepository.findById(restaurantId)
                 .orElseThrow(()-> new IllegalArgumentException("존재하지 않는 가게입니다."));
         List<Food> existFoods = foodRepository.findAllByRestaurant(restaurant);
 
+        // 음식 리스트 만들기
         List<FoodResponseDto> foods = new ArrayList<>();
         for (Food food : existFoods) {
             FoodResponseDto foodResponseDto = new FoodResponseDto(food);
