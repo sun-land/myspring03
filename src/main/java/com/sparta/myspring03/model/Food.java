@@ -1,5 +1,6 @@
 package com.sparta.myspring03.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.sparta.myspring03.requestDto.FoodRequestDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,6 +16,7 @@ public class Food {
     @Id
     private Long id;
 
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name="RESTAURNAT_ID", nullable = false)
     Restaurant restaurant;

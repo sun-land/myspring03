@@ -1,10 +1,12 @@
 package com.sparta.myspring03.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.sparta.myspring03.requestDto.RestaurantRequestDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 
 @NoArgsConstructor
 @Getter
@@ -23,6 +25,10 @@ public class Restaurant {
 
     @Column(nullable = false)
     private int deliveryFee;
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "restaurant")
+    private List<Food> foods;
 
     public Restaurant(RestaurantRequestDto restaurantRequestDto) {
         this.name = restaurantRequestDto.getName();

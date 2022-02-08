@@ -1,5 +1,6 @@
 package com.sparta.myspring03.controller;
 
+import com.sparta.myspring03.model.Food;
 import com.sparta.myspring03.requestDto.FoodRequestDto;
 import com.sparta.myspring03.responseDto.FoodResponseDto;
 import com.sparta.myspring03.service.FoodService;
@@ -26,8 +27,8 @@ public class FoodController {
 
     // 메뉴판 조회 API
     @GetMapping("/restaurant/{restaurantId}/foods")
-    public List<FoodResponseDto> getAllFoods(@PathVariable Long restaurantId) {
-        return foodService.getAllFoods(restaurantId);
+    public List<Food> getMenu(@PathVariable Long restaurantId) {
+        return foodService.getMenu(restaurantId);
     }
 
 }
