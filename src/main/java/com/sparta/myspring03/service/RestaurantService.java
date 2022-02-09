@@ -34,7 +34,7 @@ public class RestaurantService {
     }
 
     // 모든 음식점 조회
-    public List<RestaurantResponseDto> getAllRestaurants() {
+    public List<RestaurantResponseDto> getAllRestaurants(int x, int y) {
 
         // 모든 레스토랑 찾아오기
         List<Restaurant> foundRestaurantList = restaurantRepository.findAll();
@@ -42,12 +42,16 @@ public class RestaurantService {
         // 레스토랑 ResponseDto 만들기
         List<RestaurantResponseDto> responseDtoList = new ArrayList<>();
         for(Restaurant restaurant : foundRestaurantList) {
-            RestaurantResponseDto responseDto = new RestaurantResponseDto();
-            responseDto.setId(restaurant.getId());
-            responseDto.setName(restaurant.getName());
-            responseDto.setMinOrderPrice(restaurant.getMinOrderPrice());
-            responseDto.setDeliveryFee(restaurant.getDeliveryFee());
-            responseDtoList.add(responseDto);
+            // 배달지와 식당 거리 계산
+            int diff = Math.abs(restaurant.getX()-x)+Math.abs(restaurant.getY()-y);
+            if (diff<4) {
+                RestaurantResponseDto responseDto = new RestaurantResponseDto();
+                responseDto.setId(restaurant.getId());
+                responseDto.setName(restaurant.getName());
+                responseDto.setMinOrderPrice(restaurant.getMinOrderPrice());
+                responseDto.setDeliveryFee(restaurant.getDeliveryFee());
+                responseDtoList.add(responseDto);
+            }
         }
         return responseDtoList;
     }

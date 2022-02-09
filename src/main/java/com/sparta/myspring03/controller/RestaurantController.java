@@ -5,10 +5,7 @@ import com.sparta.myspring03.model.Restaurant;
 import com.sparta.myspring03.responseDto.RestaurantResponseDto;
 import com.sparta.myspring03.service.RestaurantService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -30,8 +27,8 @@ public class RestaurantController {
 
     // 모든 음식점 조회 API
     @GetMapping("/restaurants")
-    public List<RestaurantResponseDto> getAllRestaurants() {
-        return restaurantService.getAllRestaurants();
+    public List<RestaurantResponseDto> getAllRestaurants(@RequestParam int x, @RequestParam int y) {
+        return restaurantService.getAllRestaurants(x,y);
     }
 
 

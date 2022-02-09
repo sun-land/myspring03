@@ -30,10 +30,18 @@ public class Restaurant {
     @OneToMany(mappedBy = "restaurant")
     private List<Food> foods;
 
+    @Column(nullable = false)
+    private int x;
+
+    @Column(nullable = false)
+    private int y;
+
     public Restaurant(RestaurantRequestDto restaurantRequestDto) {
         this.name = restaurantRequestDto.getName();
         this.minOrderPrice = restaurantRequestDto.getMinOrderPrice();
         this.deliveryFee = restaurantRequestDto.getDeliveryFee();
+        this.x = restaurantRequestDto.getX();
+        this.y = restaurantRequestDto.getY();
     }
 
 }
