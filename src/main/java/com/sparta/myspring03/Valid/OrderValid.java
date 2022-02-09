@@ -26,7 +26,7 @@ public class OrderValid {
     }
 
     // 최소주문가격 체크
-    public void isValidTotalPrice(
+    public int isValidTotalPrice(
             List<FoodOrderRequestDto> foodOrderRequestDtoList,
             List<Food> foundFoodList,
             Restaurant foundRestaurant
@@ -40,5 +40,7 @@ public class OrderValid {
         if(foodTotalPrice< foundRestaurant.getMinOrderPrice()) {
             throw new IllegalArgumentException("최소주문가격 이상으로 주문해주세요.");
         }
+
+        return foodTotalPrice;
     }
 }

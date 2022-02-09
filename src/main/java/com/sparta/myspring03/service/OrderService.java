@@ -28,70 +28,6 @@ public class OrderService {
     private final RestaurantRepository restaurantRepository;
     private final FoodRepository foodRepository;
 
-
-
-//    // 주문 저장하기
-//    public Ordering saveOrder(OrderRequestDto orderRequestDto) {
-//
-//        // 레스토랑 정보 가져오기
-//        Restaurant restaurant = restaurantRepository.findById(orderRequestDto.getRestaurantId())
-//                .orElseThrow(()-> new IllegalArgumentException("등록되지 않은 가게입니다."));
-//        String restaurantName = restaurant.getName();
-//        int deliveryFee = restaurant.getDeliveryFee();
-//        int minOrderPrice = restaurant.getMinOrderPrice();
-//
-//        // 주문 수량 유효성 체크
-//        List<FoodOrderRequestDto> foodOrderRequestDtoList = orderRequestDto.getFoods();
-//        for (FoodOrderRequestDto requestDto : foodOrderRequestDtoList) {
-//            if(requestDto.getQuantity()<1 || requestDto.getQuantity()>100) {
-//                throw new IllegalArgumentException("수량은 1이상 100이하로 입력해주세요.");
-//            }
-//        }
-//
-//        // 주문음식 정보 리스트 가져오기
-//        List<Long> foodIdList = new ArrayList<>();
-//        for(FoodOrderRequestDto requestDto : foodOrderRequestDtoList) {
-//            foodIdList.add(requestDto.getId());
-//        }
-//        List<Food> foundFoodList = foodRepository.findAllById(foodIdList);
-//
-//        // 최소주문가격 미달 체크
-//        int foodTotalPrice = 0;
-//        for (int i=0; i<foodOrderRequestDtoList.size();i++) {
-//            int thisPrice = foundFoodList.get(i).getPrice();
-//            int thisQuantity = foodOrderRequestDtoList.get(i).getQuantity();
-//            foodTotalPrice += thisPrice*thisQuantity;
-//        }
-//        if (minOrderPrice>foodTotalPrice) {
-//            throw new IllegalArgumentException("최소 주문 가격 이상으로 주문해주세요");
-//        }
-//
-//        // 주문 생성
-//        int totalPrice = foodTotalPrice + deliveryFee;
-//        orderRequestDto.setRestaurantName(restaurantName);
-//        orderRequestDto.setDeliveryFee(deliveryFee);
-//        orderRequestDto.setTotalPrice(totalPrice);
-//        Ordering ordering = new Ordering(orderRequestDto);
-//        Ordering savedOrder = orderRepository.save(ordering);
-//
-//
-//        // 주문 음식 저장
-//        List<FoodOrder> foodOrderList = new ArrayList<>();
-//        for (int i=0; i<foodOrderRequestDtoList.size();i++) {
-//            foodOrderRequestDtoList.get(i).setName(foundFoodList.get(i).getName());
-//            foodOrderRequestDtoList.get(i)
-//                    .setPirce(foundFoodList.get(i).getPrice()*foodOrderRequestDtoList.get(i).getQuantity());
-//            foodOrderRequestDtoList.get(i).setOrdering(savedOrder);
-//            FoodOrder foodOrder = new FoodOrder(foodOrderRequestDtoList.get(i));
-//            foodOrderList.add(foodOrder);
-//        }
-//        foodOrderRepository.saveAll(foodOrderList);
-//
-//        // response 내려주기
-//
-//        return savedOrder;
-//    }
-
     // 모든 주문 조회하기
     public List<Ordering> getAllOrders() {
         return orderRepository.findAll();
@@ -115,24 +51,41 @@ public class OrderService {
         OrderValid orderValid = new OrderValid();
         orderValid.isValidFoodList(foodIds,foundFoodList);
         orderValid.isValidQuantity(foodOrderRequestDtoList);
-        orderValid.isValidTotalPrice(foodOrderRequestDtoList,foundFoodList,foundRestaurant);
+        int foodTotalPrice = orderValid.isValidTotalPrice(foodOrderRequestDtoList,foundFoodList,foundRestaurant);
 
         // 2. FoodOrder 저장
-        List<FoodOrder> foodOrderList = new ArrayList<>();
-        int foodTotalPrice = 0;
+        List<FoodOrder> foodOrderList = saveFoodOrder(foundFoodList,foodOrderRequestDtoList);
 
+        // 3. Order 저장
+        return saveOrdering(foundRestaurant,foodTotalPrice,foodOrderList);
+    }
+
+
+    // 아이디 리스트 만들기 메소드
+    private List<Long> getFoodIds (List<FoodOrderRequestDto> foodOrderRequestDtoList) {
+        List<Long> foodIds = new ArrayList<>();
+        for(FoodOrderRequestDto dto : foodOrderRequestDtoList) {
+            foodIds.add(dto.getId());
+        }
+        return foodIds;
+    }
+
+    // FoodOrder 리스트 저장 메소드
+    private List<FoodOrder> saveFoodOrder(List<Food> foundFoodList, List<FoodOrderRequestDto> foodOrderRequestDtoList) {
+        List<FoodOrder> foodOrderList = new ArrayList<>();
         for (int i=0; i<foundFoodList.size();i++) {
             String name = foundFoodList.get(i).getName();
             int quantity = foodOrderRequestDtoList.get(i).getQuantity();
             int price = foundFoodList.get(i).getPrice() * quantity;
-            foodTotalPrice += price;
             FoodOrderDto foodOrderDto = new FoodOrderDto(name, quantity, price);
             FoodOrder foodOrder = new FoodOrder(foodOrderDto);
             foodOrderList.add(foodOrder);
         }
-        foodOrderRepository.saveAll(foodOrderList);
+        return foodOrderRepository.saveAll(foodOrderList);
+    }
 
-        // 3. Order 저장
+    // Order 저장 메소드
+    private Ordering saveOrdering(Restaurant foundRestaurant, int foodTotalPrice, List<FoodOrder> foodOrderList) {
         String restaurantName = foundRestaurant.getName();
         int deliveryFee = foundRestaurant.getDeliveryFee();
         int totalPrice = foodTotalPrice + deliveryFee;
@@ -140,16 +93,5 @@ public class OrderService {
         Ordering ordering = new Ordering(orderingDto);
         ordering.addFoodOrderList(foodOrderList);
         return orderRepository.save(ordering);
-
-    }
-
-
-    // 아이디 리스트 만들기 메소드
-    public List<Long> getFoodIds (List<FoodOrderRequestDto> foodOrderRequestDtoList) {
-        List<Long> foodIds = new ArrayList<>();
-        for(FoodOrderRequestDto dto : foodOrderRequestDtoList) {
-            foodIds.add(dto.getId());
-        }
-        return foodIds;
     }
 }
