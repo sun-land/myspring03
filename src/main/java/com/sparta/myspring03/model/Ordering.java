@@ -23,7 +23,7 @@ public class Ordering {
 
     @JsonManagedReference
     @OneToMany(mappedBy = "ordering")
-    private List<FoodOrder> foodOrderList = new ArrayList<>();
+    private List<FoodOrder> foods = new ArrayList<>();
 
     @Column(nullable = false)
     private int deliveryFee;
@@ -43,6 +43,6 @@ public class Ordering {
         for(FoodOrder foodOrder : foods) {
             foodOrder.setOrdering(this);
         }
-        this.foodOrderList = foods;
+        this.foods = foods;
     }
 }
