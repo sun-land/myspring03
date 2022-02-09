@@ -1,7 +1,7 @@
 package com.sparta.myspring03.model;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.sparta.myspring03.requestDto.OrderRequestDto;
+import com.sparta.myspring03.dto.OrderingDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -31,9 +31,18 @@ public class Ordering {
     @Column(nullable = false)
     private int totalPrice;
 
-    public Ordering(OrderRequestDto orderRequestDto) {
-        this.restaurantName = orderRequestDto.getRestaurantName();
-        this.deliveryFee = orderRequestDto.getDeliveryFee();
-        this.totalPrice = orderRequestDto.getTotalPrice();
+    // 생성자
+    public Ordering(OrderingDto orderingDto) {
+        this.restaurantName = orderingDto.getRestaurantName();
+        this.deliveryFee = orderingDto.getDeliveryFee();
+        this.totalPrice = orderingDto.getTotalPrice();
+    }
+
+    // 연관관계 맺기
+    public void addFoodOrderList(List<FoodOrder> foods) {
+        for(FoodOrder foodOrder : foods) {
+            foodOrder.setOrdering(this);
+        }
+        this.foodOrderList = foods;
     }
 }

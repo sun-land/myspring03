@@ -1,6 +1,7 @@
 package com.sparta.myspring03.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.sparta.myspring03.dto.FoodOrderDto;
 import com.sparta.myspring03.requestDto.FoodOrderRequestDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,13 +28,18 @@ public class FoodOrder {
 
     @JsonBackReference
     @ManyToOne
-    @JoinColumn(name="ORDER_ID", nullable = false)
+    @JoinColumn(name="ORDER_ID")
     private Ordering ordering;
 
-    public FoodOrder(FoodOrderRequestDto foodOrderRequestDto) {
-        this.name = foodOrderRequestDto.getName();
-        this.quantity = foodOrderRequestDto.getQuantity();
-        this.price = foodOrderRequestDto.getPirce();
-        this.ordering = foodOrderRequestDto.getOrdering();
+    // 생성자
+    public FoodOrder(FoodOrderDto foodOrderDto) {
+        this.name = foodOrderDto.getName();
+        this.quantity = foodOrderDto.getQuantity();
+        this.price = foodOrderDto.getPirce();
+    }
+
+    // ordering Setter
+    public void setOrdering(Ordering ordering) {
+        this.ordering = ordering;
     }
 }
