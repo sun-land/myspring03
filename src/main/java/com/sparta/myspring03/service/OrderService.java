@@ -49,7 +49,8 @@ public class OrderService {
 
         // 1. 유효성 체크
         OrderValid orderValid = new OrderValid();
-        orderValid.isValidFoodList(foodIds,foundFoodList);
+        int diff = orderValid.isValidRestaurant(x,y,foundRestaurant);
+        orderValid.isValidFoodList(foodIds,foundFoodList, restaurantId);
         orderValid.isValidQuantity(foodOrderRequestDtoList);
         int foodTotalPrice = orderValid.isValidTotalPrice(foodOrderRequestDtoList,foundFoodList,foundRestaurant);
 
@@ -57,7 +58,7 @@ public class OrderService {
         List<FoodOrder> foodOrderList = saveFoodOrder(foundFoodList,foodOrderRequestDtoList);
 
         // 3. Order 저장
-        return saveOrdering(foundRestaurant,foodTotalPrice,foodOrderList,x,y);
+        return saveOrdering(foundRestaurant,foodTotalPrice,foodOrderList,diff);
     }
 
 
@@ -87,13 +88,9 @@ public class OrderService {
     }
 
     // Order 저장 메소드
-    private Ordering saveOrdering(Restaurant foundRestaurant, int foodTotalPrice, List<FoodOrder> foodOrderList, int x, int y) {
+    private Ordering saveOrdering(Restaurant foundRestaurant, int foodTotalPrice, List<FoodOrder> foodOrderList, int diff) {
         String restaurantName = foundRestaurant.getName();
-
-        // 배달비 할증
-        int diff = Math.abs(foundRestaurant.getX()-x)+Math.abs(foundRestaurant.getY()-y);
         int deliveryFee = foundRestaurant.getDeliveryFee() + 500*diff;
-
         int totalPrice = foodTotalPrice + deliveryFee;
         OrderingDto orderingDto = new OrderingDto(restaurantName,deliveryFee,totalPrice);
         Ordering ordering = new Ordering(orderingDto);

@@ -8,10 +8,25 @@ import java.util.List;
 
 public class OrderValid {
 
-    // 메뉴 존재하는지 체크
-    public void isValidFoodList(List<Long> foodIds, List<Food> foundFoodList) {
+    // 배달 가능한 거리의 음식점인지 체크
+    public int isValidRestaurant(int x, int y, Restaurant foundRestaurant) {
+        int diff = Math.abs(foundRestaurant.getX()-x)+Math.abs(foundRestaurant.getY()-y);
+        if (diff>3) {
+            throw new IllegalArgumentException("거리가 멀어 배달되지 않습니다.");
+        }
+        return diff;
+    }
+
+
+    // 가게에 메뉴 존재하는지 체크
+    public void isValidFoodList(List<Long> foodIds, List<Food> foundFoodList, Long restaurantId) {
         if (foodIds.size() != foundFoodList.size()) {
             throw new IllegalArgumentException("주문에 유효하지 않은 메뉴가 포함되어 있습니다.");
+        }
+        for (Food food : foundFoodList) {
+            if (!food.getRestaurant().getId().equals(restaurantId)) {
+                throw new IllegalArgumentException("주문에 다른 가게의 음식이 포함되어 있습니다.");
+            }
         }
     }
 
@@ -43,4 +58,6 @@ public class OrderValid {
 
         return foodTotalPrice;
     }
+
+
 }
