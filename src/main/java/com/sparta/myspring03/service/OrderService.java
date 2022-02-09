@@ -35,7 +35,7 @@ public class OrderService {
     }
 
     // 주문 저장하기
-    public Ordering saveOrder(OrderRequestDto requestDto) {
+    public Ordering saveOrder(OrderRequestDto requestDto, int x, int y) {
 
         // 레스토랑의 정보
         Long restaurantId = requestDto.getRestaurantId();
@@ -57,9 +57,11 @@ public class OrderService {
         List<FoodOrder> foodOrderList = saveFoodOrder(foundFoodList,foodOrderRequestDtoList);
 
         // 3. Order 저장
-        return saveOrdering(foundRestaurant,foodTotalPrice,foodOrderList);
+        return saveOrdering(foundRestaurant,foodTotalPrice,foodOrderList,x,y);
     }
 
+
+    // 리팩토링 메소드들
 
     // 아이디 리스트 만들기 메소드
     private List<Long> getFoodIds (List<FoodOrderRequestDto> foodOrderRequestDtoList) {
@@ -85,9 +87,13 @@ public class OrderService {
     }
 
     // Order 저장 메소드
-    private Ordering saveOrdering(Restaurant foundRestaurant, int foodTotalPrice, List<FoodOrder> foodOrderList) {
+    private Ordering saveOrdering(Restaurant foundRestaurant, int foodTotalPrice, List<FoodOrder> foodOrderList, int x, int y) {
         String restaurantName = foundRestaurant.getName();
-        int deliveryFee = foundRestaurant.getDeliveryFee();
+
+        // 배달비 할증
+        int diff = Math.abs(foundRestaurant.getX()-x)+Math.abs(foundRestaurant.getY()-y);
+        int deliveryFee = foundRestaurant.getDeliveryFee() + 500*diff;
+
         int totalPrice = foodTotalPrice + deliveryFee;
         OrderingDto orderingDto = new OrderingDto(restaurantName,deliveryFee,totalPrice);
         Ordering ordering = new Ordering(orderingDto);
