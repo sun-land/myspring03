@@ -2,9 +2,11 @@ package com.sparta.myspring03.model;
 
 import com.sparta.myspring03.requestDto.SignupRequestDto;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
+@NoArgsConstructor
 @Getter
 @Entity
 public class User {
