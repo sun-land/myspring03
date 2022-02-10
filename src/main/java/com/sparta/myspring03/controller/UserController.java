@@ -24,6 +24,6 @@ public class UserController {
     // 로그인
     @GetMapping ("/user/login")
     public String login() {
-        return "{\"name\":\"BTS\",\"age\":28}";
+        return "로그인 성공";
     }
 }
