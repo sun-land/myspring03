@@ -4,10 +4,7 @@ import com.sparta.myspring03.requestDto.SignupRequestDto;
 import com.sparta.myspring03.service.UserService;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
@@ -22,8 +19,8 @@ public class UserController {
     }
 
     // 로그인
-    @GetMapping ("/user/login")
-    public String login() {
-        return "로그인 성공";
-    }
+//    @GetMapping("/user/login")
+//    public String login() {
+//        return "로그인 성공";
+//    }
 }
